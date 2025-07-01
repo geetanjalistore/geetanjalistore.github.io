@@ -1,51 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Products - Geetanjali Store</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <title>Products - Geetanjali Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    .product { border: 1px solid #ccc; padding: 10px; text-align: center; }
+    .product img { max-width: 100%; height: 150px; object-fit: cover; }
+    .product h4 { margin: 10px 0 5px; }
+  </style>
 </head>
 <body>
 
-    <header>
-        <h1>Geetanjali Store</h1>
-        <nav>
-            <a href="index.html">Home</a> |
-            <a href="products.html">Products</a> |
-            <a href="login.html">Login</a> |
-            <a href="cart.html">Cart</a>
-        </nav>
-    </header>
+  <h2>Available Products</h2>
+  <div class="product-grid" id="productGrid"></div>
 
-    <main>
-        <h2>Available Products</h2>
+  <script>
+    const products = JSON.parse(localStorage.getItem("products") || "[]");
+    const grid = document.getElementById("productGrid");
 
-        <div class="product">
-            <img src="https://via.placeholder.com/150" alt="Lipstick">
-            <h3>Matte Lipstick</h3>
-            <p>Price: ₹299</p>
-            <button>Add to Cart</button>
-        </div>
-
-        <div class="product">
-            <img src="https://via.placeholder.com/150" alt="Foundation">
-            <h3>Liquid Foundation</h3>
-            <p>Price: ₹499</p>
-            <button>Add to Cart</button>
-        </div>
-
-        <div class="product">
-            <img src="https://via.placeholder.com/150" alt="Kajal">
-            <h3>Waterproof Kajal</h3>
-            <p>Price: ₹199</p>
-            <button>Add to Cart</button>
-        </div>
-
-    </main>
-
-    <footer>
-        <p>&copy; 2025 Geetanjali Store</p>
-    </footer>
+    if (products.length === 0) {
+      grid.innerHTML = "<p>No products available.</p>";
+    } else {
+      products.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "product";
+        div.innerHTML = `
+          <img src="${p.image}" />
+          <h4>${p.name}</h4>
+          <p>₹${p.price}</p>
+        `;
+        grid.appendChild(div);
+      });
+    }
+  </script>
 
 </body>
 </html>
