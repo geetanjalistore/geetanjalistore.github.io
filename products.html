@@ -2,20 +2,31 @@
 <html>
 <head>
     <title>Products - Geetanjali Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header><h1>Our Products</h1></header>
+    <header>
+        <h1>Our Products</h1>
+        <nav>
+            <a href="index.html">Home</a> |
+            <a href="products.html">Products</a> |
+            <a href="login.html">Login</a> |
+            <a href="cart.html">Cart</a>
+        </nav>
+    </header>
+
     <main>
-        <div class="product">
-            <h3>Lipstick</h3>
-            <p>₹299 <button onclick="addToCart('Lipstick')">Add to Cart</button></p>
-        </div>
-        <div class="product">
-            <h3>Foundation</h3>
-            <p>₹499 <button onclick="addToCart('Foundation')">Add to Cart</button></p>
-        </div>
+        <h2>Featured Cosmetics</h2>
+        <ul>
+            <li>Lipstick - ₹299</li>
+            <li>Foundation - ₹499</li>
+            <li>Eyeliner - ₹199</li>
+        </ul>
     </main>
-    <script src="script.js"></script>
+
+    <footer>
+        <p>&copy; 2025 Geetanjali Store</p>
+    </footer>
 </body>
 </html>
