@@ -1,2 +1,22 @@
-<!-- Coupon Code Page -->
-<h2>Apply Your Coupon</h2><input type='text' placeholder='Enter Code'><button>Apply</button>
+<!DOCTYPE html>
+<html>
+<head><title>Apply Coupon</title></head>
+<body>
+  <h2>Enter Coupon Code</h2>
+  <input id="couponCode" placeholder="Enter code">
+  <button onclick="applyCoupon()">Apply</button>
+  <p id="msg"></p>
+
+  <script>
+    function applyCoupon() {
+      let code = document.getElementById("couponCode").value;
+      if (code === "SAVE10") {
+        document.getElementById("msg").innerText = "10% discount applied!";
+        // Apply discount logic to cart total
+      } else {
+        document.getElementById("msg").innerText = "Invalid code!";
+      }
+    }
+  </script>
+</body>
+</html>
