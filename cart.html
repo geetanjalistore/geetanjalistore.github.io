@@ -1,49 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cart - Geetanjali Store</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <title>Your Cart - Geetanjali Store</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
+  <h2>Your Shopping Cart</h2>
+  <div id="cartItems"></div>
+  <p><strong>Total: ₹<span id="cartTotal">0</span></strong></p>
+  <a href="checkout.html"><button>Proceed to Checkout</button></a>
 
-    <header>
-        <h1>Geetanjali Store</h1>
-        <nav>
-            <a href="index.html">Home</a> |
-            <a href="products.html">Products</a> |
-            <a href="login.html">Login</a> |
-            <a href="cart.html">Cart</a>
-        </nav>
-    </header>
+  <script>
+    window.onload = function () {
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      const container = document.getElementById("cartItems");
+      let total = 0;
+      container.innerHTML = "";
+      cart.forEach((item, index) => {
+        total += item.price;
+        container.innerHTML += \`
+          <div>
+            <img src="\${item.image}" width="100">
+            \${item.name} - ₹\${item.price}
+            <button onclick="removeItem(\${index})">Remove</button>
+          </div><br>
+        \`;
+      });
+      document.getElementById("cartTotal").innerText = total;
+    };
 
-    <main>
-        <h2>Your Cart</h2>
-        <p>Total: ₹1000</p>
-
-        <h3>Apply Coupon</h3>
-        <input type="text" id="couponCode" placeholder="Enter coupon code" />
-        <button onclick="applyCoupon()">Apply</button>
-
-        <p id="discountMsg"></p>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 Geetanjali Store</p>
-    </footer>
-
-    <script>
-        function applyCoupon() {
-            const code = document.getElementById("couponCode").value;
-            const discountMsg = document.getElementById("discountMsg");
-
-            if (code === "GEETANJALI20") {
-                discountMsg.innerText = "✅ Coupon Applied! You got 20% off.";
-            } else {
-                discountMsg.innerText = "❌ Invalid Coupon Code.";
-            }
-        }
-    </script>
-
+    function removeItem(index) {
+      let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      location.reload();
+    }
+  </script>
 </body>
 </html>

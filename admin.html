@@ -3,82 +3,71 @@
 <head>
   <title>Admin Panel - Geetanjali Store</title>
   <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h2>Admin Login</h2>
-  <div id="login-section">
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="adminLogin()">Login</button>
-  </div>
-
-  <div id="admin-panel" style="display:none;">
-    <h2>Add New Product</h2>
-    <input type="text" id="pname" placeholder="Product Name">
-    <input type="text" id="pprice" placeholder="Product Price">
-    <input type="file" id="pimage">
-    <button onclick="addProduct()">Add Product</button>
-
-    <h3>Added Products</h3>
-    <div id="product-list"></div>
-  </div>
-
   <script>
-    const adminUser = "Geetanjali";
-    const adminPass = "9690394370ks";
-
-    function adminLogin() {
-      const user = document.getElementById("username").value;
-      const pass = document.getElementById("password").value;
-      if (user === adminUser && pass === adminPass) {
-        document.getElementById("login-section").style.display = "none";
-        document.getElementById("admin-panel").style.display = "block";
-        displayProducts();
+    function loginAdmin() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      if(username === "Geetanjali" && password === "9690394370ks") {
+        document.getElementById("loginForm").style.display = "none";
+        document.getElementById("adminPanel").style.display = "block";
+        loadProducts();
       } else {
-        alert("Invalid login");
+        alert("Invalid credentials!");
       }
     }
 
-    function addProduct() {
+    function saveProduct() {
       const name = document.getElementById("pname").value;
       const price = document.getElementById("pprice").value;
-      const file = document.getElementById("pimage").files[0];
+      const image = document.getElementById("pimage").value;
+      let products = JSON.parse(localStorage.getItem("products") || "[]");
+      products.push({ name, price, image });
+      localStorage.setItem("products", JSON.stringify(products));
+      loadProducts();
+    }
 
-      if (!name || !price || !file) {
-        alert("Fill all fields");
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        let products = JSON.parse(localStorage.getItem("products") || "[]");
-        products.push({ name, price, image: e.target.result });
-        localStorage.setItem("products", JSON.stringify(products));
-        displayProducts();
-      };
-      reader.readAsDataURL(file);
+    function loadProducts() {
+      let products = JSON.parse(localStorage.getItem("products") || "[]");
+      const container = document.getElementById("productList");
+      container.innerHTML = "";
+      products.forEach((item, index) => {
+        container.innerHTML += \`
+          <div style="margin:10px; border:1px solid #ccc; padding:10px;">
+            <img src="\${item.image}" width="100"><br>
+            \${item.name} - ₹\${item.price}
+            <button onclick="deleteProduct(\${index})">Delete</button>
+          </div>
+        \`;
+      });
     }
 
     function deleteProduct(index) {
       let products = JSON.parse(localStorage.getItem("products") || "[]");
       products.splice(index, 1);
       localStorage.setItem("products", JSON.stringify(products));
-      displayProducts();
-    }
-
-    function displayProducts() {
-      const list = document.getElementById("product-list");
-      list.innerHTML = "";
-      let products = JSON.parse(localStorage.getItem("products") || "[]");
-      products.forEach((p, i) => {
-        list.innerHTML += `
-          <div>
-            <img src="${p.image}" width="100"><br>
-            ${p.name} - ₹${p.price}
-            <button onclick="deleteProduct(${i})">Delete</button>
-          </div><hr>`;
-      });
+      loadProducts();
     }
   </script>
+</head>
+<body>
+
+  <h2>Admin Login</h2>
+  <div id="loginForm">
+    <input type="text" id="username" placeholder="Username"><br><br>
+    <input type="password" id="password" placeholder="Password"><br><br>
+    <button onclick="loginAdmin()">Login</button>
+  </div>
+
+  <div id="adminPanel" style="display:none;">
+    <h3>Add Product</h3>
+    <input type="text" id="pname" placeholder="Product Name"><br><br>
+    <input type="text" id="pprice" placeholder="Price"><br><br>
+    <input type="text" id="pimage" placeholder="Image URL"><br><br>
+    <button onclick="saveProduct()">Add Product</button>
+
+    <h3>All Products</h3>
+    <div id="productList"></div>
+  </div>
+
 </body>
 </html>
