@@ -2,12 +2,13 @@
 <html>
 <head>
     <title>Cart - Geetanjali Store</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <header>
-        <h1>Your Shopping Cart</h1>
+        <h1>Geetanjali Store</h1>
         <nav>
             <a href="index.html">Home</a> |
             <a href="products.html">Products</a> |
@@ -17,11 +18,32 @@
     </header>
 
     <main>
-        <p>Your cart is empty.</p>
+        <h2>Your Cart</h2>
+        <p>Total: ₹1000</p>
+
+        <h3>Apply Coupon</h3>
+        <input type="text" id="couponCode" placeholder="Enter coupon code" />
+        <button onclick="applyCoupon()">Apply</button>
+
+        <p id="discountMsg"></p>
     </main>
 
     <footer>
         <p>&copy; 2025 Geetanjali Store</p>
     </footer>
+
+    <script>
+        function applyCoupon() {
+            const code = document.getElementById("couponCode").value;
+            const discountMsg = document.getElementById("discountMsg");
+
+            if (code === "GEETANJALI20") {
+                discountMsg.innerText = "✅ Coupon Applied! You got 20% off.";
+            } else {
+                discountMsg.innerText = "❌ Invalid Coupon Code.";
+            }
+        }
+    </script>
+
 </body>
 </html>
