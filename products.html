@@ -1,39 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Products - Geetanjali Store</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Geetanjali Store - Products</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div id="header-placeholder"></div>
+  <script>
+    fetch("Header.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("header-placeholder").innerHTML = data;
+      });
+  </script>
 
-<header>
-  <div class="logo">Geetanjali Store</div>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="products.html">Shop</a>
-    <a href="login.html">Login</a>
-    <a href="cart.html">Cart</a>
-  </nav>
-</header>
+  <section class="product-page">
+    <h1 class="section-title">Explore Our Products</h1>
+    <div id="product-list" class="product-grid"></div>
+  </section>
 
-<section class="products">
-  <h2>Our Products</h2>
-  <div class="product-list">
-    <div class="product">
-      <img src="https://via.placeholder.com/200x200?text=Lipstick" alt="Lipstick">
-      <h3>Lipstick</h3>
-      <p>Price: ₹299</p>
-      <button onclick="addToCart('Lipstick', 299, 'https://via.placeholder.com/200x200?text=Lipstick')">Add to Cart</button>
-    </div>
-    <div class="product">
-      <img src="https://via.placeholder.com/200x200?text=Foundation" alt="Foundation">
-      <h3>Foundation</h3>
-      <p>Price: ₹499</p>
-      <button onclick="addToCart('Foundation', 499, 'https://via.placeholder.com/200x200?text=Foundation')">Add to Cart</button>
-    </div>
-  </div>
-</section>
-
+  <script src="script.js"></script>
 </body>
 </html>
