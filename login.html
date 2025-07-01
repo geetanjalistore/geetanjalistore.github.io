@@ -1,17 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login - Geetanjali Store</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #f5d1ff, #ffe8f0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #7b1fa2;
+    }
+
+    .login-container input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 20px;
+      top: 43%;
+      cursor: pointer;
+    }
+
+    .form-group {
+      position: relative;
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 12px;
+      background-color: #7b1fa2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .login-container button:hover {
+      background-color: #5e1585;
+    }
+
+    .remember {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .remember input {
+      margin-right: 10px;
+    }
+
+    .msg {
+      text-align: center;
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-  <h2>Login</h2>
-  <form>
-    <label>Email:</label><br>
-    <input type="email" placeholder="Enter email"><br><br>
-    <label>Password:</label><br>
-    <input type="password" placeholder="Enter password"><br><br>
-    <button type="submit">Login</button>
-  </form>
+
+  <div class="login-container">
+    <h2>Login to Geetanjali</h2>
+    <form id="loginForm" onsubmit="return loginUser()">
+      <input type="email" id="email" placeholder="Email" required />
+      
+      <div class="form-group">
+        <input type="password" id="password" placeholder="Password" required />
+        <span class="toggle-password" onclick="togglePassword()">👁️</span>
+      </div>
+      
+      <div class="remember">
+        <input type="checkbox" id="rememberMe" />
+        <label for="rememberMe">Remember me</label>
+      </div>
+      
+      <button type="submit">Login</button>
+      <p class="msg" id="message"></p>
+    </form>
+  </div>
+
+  <script>
+    // Password toggle
+    function togglePassword() {
+      const passField = document.getElementById("password");
+      passField.type = passField.type === "password" ? "text" : "password";
+    }
+
+    // Local sample users (you can remove this in Firebase version)
+    const users = [
+      { email: "admin@store.com", password: "admin123", role: "admin" },
+      { email: "user@store.com", password: "user123", role: "customer" }
+    ];
+
+    // Login function
+    function loginUser() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const remember = document.getElementById("rememberMe").checked;
+
+      const user = users.find(u => u.email === email && u.password === password);
+      const msg = document.getElementById("message");
+
+      if (user) {
+        msg.style.color = "green";
+        msg.innerText = "Login Successful!";
+        
+        if (remember) {
+          localStorage.setItem("loggedInUser", JSON.stringify(user));
+        }
+
+        setTimeout(() => {
+          window.location.href = user.role === "admin" ? "admin.html" : "index.html";
+        }, 1000);
+      } else {
+        msg.style.color = "red";
+        msg.innerText = "Invalid email or password";
+      }
+
+      return false;
+    }
+
+    // Auto-fill if rememberMe used
+    window.onload = () => {
+      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+      if (user) {
+        document.getElementById("email").value = user.email;
+        document.getElementById("password").value = user.password;
+        document.getElementById("rememberMe").checked = true;
+      }
+    }
+  </script>
 </body>
 </html>
