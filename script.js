@@ -16,10 +16,7 @@ const products = [
     name: "Compact Powder",
     price: 249,
     image: "https://via.placeholder.com/150",
-  }
-];
-
-function renderProducts() {
+    function renderProducts() {
   const container = document.getElementById("product-list");
   products.forEach((product) => {
     const card = document.createElement("div");
@@ -30,7 +27,13 @@ function renderProducts() {
       <p>₹${product.price}</p>
       <button onclick="addToCart(${product.id})">Add to Cart</button>
     `;
-    container.appendChild(card);
+    container.appendChifunction addToWishlist(id) {
+  const item = products.find(p => p.id === id);
+  let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+  wishlist.push(item);
+  localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  alert(`${item.name} added to wishlist!`);
+    }ld(card);
   });
 }
 
