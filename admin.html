@@ -1,73 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Admin Panel - Geetanjali Store</title>
-  <link rel="stylesheet" href="style.css">
-  <script>
-    function loginAdmin() {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-      if(username === "Geetanjali" && password === "9690394370ks") {
-        document.getElementById("loginForm").style.display = "none";
-        document.getElementById("adminPanel").style.display = "block";
-        loadProducts();
-      } else {
-        alert("Invalid credentials!");
-      }
-    }
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
-    function saveProduct() {
-      const name = document.getElementById("pname").value;
-      const price = document.getElementById("pprice").value;
-      const image = document.getElementById("pimage").value;
-      let products = JSON.parse(localStorage.getItem("products") || "[]");
-      products.push({ name, price, image });
-      localStorage.setItem("products", JSON.stringify(products));
-      loadProducts();
-    }
+<!-- Firebase Config (Paste yours below) -->
+<script>
+  const firebaseConfig = {
+    apiKey: "YOUR-API-KEY",
+    authDomain: "your-app.firebaseapp.com",
+    databaseURL: "https://your-app.firebaseio.com",
+    projectId: "your-app",
+    storageBucket: "your-app.appspot.com",
+    messagingSenderId: "SENDER_ID",
+    appId: "APP_ID"
+  };
+  firebase.initializeApp(firebaseConfig);
+</script>
 
-    function loadProducts() {
-      let products = JSON.parse(localStorage.getItem("products") || "[]");
-      const container = document.getElementById("productList");
-      container.innerHTML = "";
-      products.forEach((item, index) => {
-        container.innerHTML += \`
-          <div style="margin:10px; border:1px solid #ccc; padding:10px;">
-            <img src="\${item.image}" width="100"><br>
-            \${item.name} - ₹\${item.price}
-            <button onclick="deleteProduct(\${index})">Delete</button>
-          </div>
-        \`;
+<h2>Add Product</h2>
+<form id="productForm">
+  <input type="text" id="pname" placeholder="Product Name" required><br/>
+  <input type="number" id="price" placeholder="Price" required><br/>
+  <input type="file" id="image" accept="image/*" required><br/>
+  <button type="submit">Add Product</button>
+</form>
+
+<script>
+  document.getElementById("productForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const pname = document.getElementById("pname").value;
+    const price = document.getElementById("price").value;
+    const file = document.getElementById("image").files[0];
+    const storageRef = firebase.storage().ref('products/' + file.name);
+
+    storageRef.put(file).then(snapshot => {
+      snapshot.ref.getDownloadURL().then(url => {
+        const productRef = firebase.database().ref("products").push();
+        productRef.set({ name: pname, price: price, image: url });
+        alert("✅ Product Added!");
+        document.getElementById("productForm").reset();
       });
-    }
-
-    function deleteProduct(index) {
-      let products = JSON.parse(localStorage.getItem("products") || "[]");
-      products.splice(index, 1);
-      localStorage.setItem("products", JSON.stringify(products));
-      loadProducts();
-    }
-  </script>
-</head>
-<body>
-
-  <h2>Admin Login</h2>
-  <div id="loginForm">
-    <input type="text" id="username" placeholder="Username"><br><br>
-    <input type="password" id="password" placeholder="Password"><br><br>
-    <button onclick="loginAdmin()">Login</button>
-  </div>
-
-  <div id="adminPanel" style="display:none;">
-    <h3>Add Product</h3>
-    <input type="text" id="pname" placeholder="Product Name"><br><br>
-    <input type="text" id="pprice" placeholder="Price"><br><br>
-    <input type="text" id="pimage" placeholder="Image URL"><br><br>
-    <button onclick="saveProduct()">Add Product</button>
-
-    <h3>All Products</h3>
-    <div id="productList"></div>
-  </div>
-
-</body>
-</html>
+    });
+  });
+</script>
