@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout - Geetanjali Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+  <h2>Checkout</h2>
+  <p>Total Amount: ₹500</p>
+
+  <!-- Payment Button -->
+  <button onclick="payNow()">Pay Now</button>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    function payNow() {
+      var options = {
+        "key": "rzp_test_XXXXXXXXXXXXXX", // ← Yahan apna Razorpay Key ID daalo
+        "amount": "50000", // ₹500 = 50000 paisa
+        "currency": "INR",
+        "name": "Geetanjali Store",
+        "description": "Order Payment",
+        "handler": function (response){
+          alert("✅ Payment Successful!\nPayment ID: " + response.razorpay_payment_id);
+        },
+        "prefill": {
+          "name": "Kapil Saini",
+          "email": "kappu91190@gmail.com"
+        }
+      };
+      var rzp1 = new Razorpay(options);
+      rzp1.open();
+    }
+  </script>
+
+</body>
+</html>
