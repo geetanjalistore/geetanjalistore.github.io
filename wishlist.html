@@ -1,2 +1,21 @@
-<!-- Wishlist Page -->
-<h2>Your Wishlist</h2><div id='wishlistItems'></div>
+<!DOCTYPE html>
+<html>
+<head><title>Wishlist</title></head>
+<body>
+  <h2>Your Wishlist</h2>
+  <div id="wishlistItems"></div>
+
+  <script>
+    const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    const container = document.getElementById("wishlistItems");
+
+    if (wishlist.length === 0) {
+      container.innerHTML = "<p>No items in wishlist.</p>";
+    } else {
+      wishlist.forEach(item => {
+        container.innerHTML += `<div><img src="${item.image}" width="100"><br>${item.name} - ₹${item.price}</div><br>`;
+      });
+    }
+  </script>
+</body>
+</html>
