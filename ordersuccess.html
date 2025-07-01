@@ -1,9 +1,24 @@
 <!DOCTYPE html>
-<html>
-<head><title>Order Success</title></head>
-<body style="text-align:center; padding:50px;">
-  <h2>🎉 Thank you for your order!</h2>
-  <p>Your order was placed successfully.</p>
-  <a href="index.html">Back to Home</a>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Successful - Geetanjali Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="header-placeholder"></div>
+  <script>
+    fetch("Header.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("header-placeholder").innerHTML = data;
+      });
+  </script>
+
+  <div class="success-container">
+    <h1>Thank You! 🎉</h1>
+    <p>Your order has been placed successfully.</p>
+    <a href="products.html" class="btn">Continue Shopping</a>
+  </div>
 </body>
 </html>
