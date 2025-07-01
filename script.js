@@ -1,62 +1,45 @@
-// Admin Login
-function adminLogin() {
-  const user = document.getElementById("username").value;
-  const pass = document.getElementById("password").value;
-
-  if (user === "Geetanjali" && pass === "9690394370ks") {
-    document.getElementById("login-section").style.display = "none";
-    document.getElementById("admin-panel").style.display = "block";
-  } else {
-    alert("Invalid login credentials");
+const products = [
+  {
+    id: 1,
+    name: "Lakme Lipstick",
+    price: 299,
+    image: "https://via.placeholder.com/150",
+  },
+  {
+    id: 2,
+    name: "Face Wash",
+    price: 199,
+    image: "https://via.placeholder.com/150",
+  },
+  {
+    id: 3,
+    name: "Compact Powder",
+    price: 249,
+    image: "https://via.placeholder.com/150",
   }
-}
+];
 
-// Product Storage
-let products = JSON.parse(localStorage.getItem("products")) || [];
-
-function addProduct() {
-  const name = document.getElementById("pname").value;
-  const price = document.getElementById("pprice").value;
-  const image = document.getElementById("pimage").files[0];
-
-  if (!name || !price || !image) {
-    alert("Fill all fields");
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onloadend = function () {
-    const product = {
-      name,
-      price,
-      image: reader.result,
-    };
-    products.push(product);
-    localStorage.setItem("products", JSON.stringify(products));
-    displayProducts();
-  };
-  reader.readAsDataURL(image);
-}
-
-function deleteProduct(index) {
-  products.splice(index, 1);
-  localStorage.setItem("products", JSON.stringify(products));
-  displayProducts();
-}
-
-function displayProducts() {
-  const list = document.getElementById("product-list");
-  if (!list) return;
-  list.innerHTML = "";
-  products.forEach((product, index) => {
-    list.innerHTML += `
-      <div>
-        <img src="${product.image}" width="100"><br>
-        <b>${product.name}</b> - ₹${product.price}
-        <button onclick="deleteProduct(${index})">Delete</button>
-      </div><hr>
+function renderProducts() {
+  const container = document.getElementById("product-list");
+  products.forEach((product) => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.innerHTML = `
+      <img src="${product.image}" alt="${product.name}">
+      <h2>${product.name}</h2>
+      <p>₹${product.price}</p>
+      <button onclick="addToCart(${product.id})">Add to Cart</button>
     `;
+    container.appendChild(card);
   });
 }
 
-window.onload = displayProducts;
+function addToCart(id) {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const item = products.find(p => p.id === id);
+  cart.push(item);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert(`${item.name} added to cart!`);
+}
+
+document.addEventListener("DOMContentLoaded", renderProducts);
