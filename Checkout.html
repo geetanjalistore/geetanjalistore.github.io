@@ -2,37 +2,34 @@
 <html>
 <head>
   <title>Checkout - Geetanjali Store</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-
   <h2>Checkout</h2>
-  <p>Total Amount: ₹500</p>
-
-  <!-- Payment Button -->
-  <button onclick="payNow()">Pay Now</button>
+  <p>Total Amount: ₹<span id="amount">0</span></p>
+  <button onclick="payNow()">Pay with Razorpay</button>
 
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script>
+    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    let total = cart.reduce((sum, item) => sum + item.price, 0);
+    document.getElementById("amount").innerText = total;
+
     function payNow() {
       var options = {
-        "key": "rzp_test_XXXXXXXXXXXXXX", // ← Yahan apna Razorpay Key ID daalo
-        "amount": "50000", // ₹500 = 50000 paisa
+        "key": "rzp_test_XXXXXXXXXXXXXX", // Replace with your Razorpay Key
+        "amount": total * 100,
         "currency": "INR",
         "name": "Geetanjali Store",
         "description": "Order Payment",
         "handler": function (response){
-          alert("✅ Payment Successful!\nPayment ID: " + response.razorpay_payment_id);
-        },
-        "prefill": {
-          "name": "Kapil Saini",
-          "email": "kappu91190@gmail.com"
+          alert("Payment Successful: " + response.razorpay_payment_id);
+          localStorage.removeItem("cart");
+          window.location.href = "ordersuccess.html";
         }
       };
-      var rzp1 = new Razorpay(options);
-      rzp1.open();
+      var rzp = new Razorpay(options);
+      rzp.open();
     }
   </script>
-
 </body>
 </html>
