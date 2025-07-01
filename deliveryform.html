@@ -1,2 +1,21 @@
-<!-- Delivery Form -->
-<h2>Shipping Info</h2><input placeholder='Address'><input placeholder='City'><input placeholder='Pincode'>
+<!DOCTYPE html>
+<html>
+<head><title>Shipping Details</title></head>
+<body>
+  <h2>Delivery Information</h2>
+  <form onsubmit="return submitForm()">
+    <input placeholder="Name" required><br><br>
+    <input placeholder="Phone Number" required><br><br>
+    <input placeholder="Address" required><br><br>
+    <input placeholder="Pincode" required><br><br>
+    <button type="submit">Place Order</button>
+  </form>
+
+  <script>
+    function submitForm() {
+      alert("Order placed with delivery info!");
+      return false; // prevent real form submission
+    }
+  </script>
+</body>
+</html>
