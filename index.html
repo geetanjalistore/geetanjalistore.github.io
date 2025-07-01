@@ -1,24 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Geetanjali Store - Home</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Geetanjali Store – Home</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <h1>Welcome to Geetanjali Store</h1>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="products.html">Products</a>
-    <a href="login.html">Login</a>
-    <a href="cart.html">Cart</a>
-    <a href="checkout.html">Checkout</a>
-    <a href="admin.html">Admin</a>
-  </nav>
-</header>
-<main>
-  <h2>Top Deals on Cosmetics</h2>
-  <p>Shop our best cosmetic products at discounted prices.</p>
-</main>
+
+  <!-- ✅ Header / Navigation -->
+  <header class="header">
+    <img src="icon.png" alt="Geetanjali Store" class="logo" />
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="cart.html">Cart</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <!-- ✅ Banner Section -->
+  <section class="banner">
+    <h1>Welcome to Geetanjali Store</h1>
+    <p>Shop the best cosmetics at unbeatable prices.</p>
+    <a href="products.html" class="btn">Shop Now</a>
+  </section>
+
+  <!-- ✅ Categories Section -->
+  <section class="categories">
+    <h2>Categories</h2>
+    <div class="category-grid">
+      <div class="category-item">
+        <img src="img/lipstick.jpg" alt="Lipsticks">
+        <p>Lipsticks</p>
+      </div>
+      <div class="category-item">
+        <img src="img/foundation.jpg" alt="Foundation">
+        <p>Foundation</p>
+      </div>
+      <div class="category-item">
+        <img src="img/skincare.jpg" alt="Skincare">
+        <p>Skincare</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ Featured Products Section -->
+  <section class="featured">
+    <h2>Featured Products</h2>
+    <div class="product-grid" id="featured-products">
+      <!-- Products will be dynamically loaded from Firebase -->
+    </div>
+  </section>
+
+  <!-- ✅ Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 Geetanjali Store. All rights reserved.</p>
+    <p>Follow us: Instagram | Facebook</p>
+  </footer>
+
+  <!-- ✅ Firebase Config & Script -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
+  <script src="firebase-config.js"></script>
+  <script>
+    const db = firebase.database();
+    const productGrid = document.getElementById("featured-products");
+
+    db.ref("products").limitToFirst(6).once("value", snapshot => {
+      snapshot.forEach(child => {
+        const item = child.val();
+        const div = document.createElement("div");
+        div.className = "product";
+        div.innerHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <h4>${item.name}</h4>
+          <p>₹${item.price}</p>
+          <button onclick="addToCart('${item.name}', ${item.price}, '${item.image}')">Add to Cart</button>
+        `;
+        productGrid.appendChild(div);
+      });
+    });
+
+    function addToCart(name, price, image) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.push({ name, price, image });
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert("Product added to cart!");
+    }
+  </script>
 </body>
 </html>
