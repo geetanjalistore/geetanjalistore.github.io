@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel - Geetanjali Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .login, .dashboard { max-width: 400px; margin: auto; }
+    .hidden { display: none; }
+    input, button { width: 100%; margin: 8px 0; padding: 10px; }
+    img { max-width: 100px; margin-top: 10px; }
+    .product-item { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+
+  <div class="login" id="loginBox">
+    <h2>Admin Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <p id="loginMsg" style="color:red;"></p>
+  </div>
+
+  <div class="dashboard hidden" id="adminBox">
+    <h2>Welcome, Admin</h2>
+
+    <h3>Add Product</h3>
+    <input type="text" id="pname" placeholder="Product Name" />
+    <input type="number" id="pprice" placeholder="Price" />
+    <input type="file" id="pimage" accept="image/*" />
+    <button onclick="addProduct()">Add Product</button>
+
+    <h3>Product List</h3>
+    <div id="productList"></div>
+  </div>
+
+  <script>
+    const adminUser = "Geetanjali";
+    const adminPass = "9690394370ks";
+
+    function login() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      if (user === adminUser && pass === adminPass) {
+        document.getElementById("loginBox").classList.add("hidden");
+        document.getElementById("adminBox").classList.remove("hidden");
+        loadProducts();
+      } else {
+        document.getElementById("loginMsg").innerText = "Invalid login!";
+      }
+    }
+
+    function addProduct() {
+      const name = document.getElementById("pname").value;
+      const price = document.getElementById("pprice").value;
+      const file = document.getElementById("pimage").files[0];
+
+      if (!name || !price || !file) {
+        alert("Please fill all fields");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const product = {
+          name: name,
+          price: price,
+          image: e.target.result
+        };
+
+        let products = JSON.parse(localStorage.getItem("products") || "[]");
+        products.push(product);
+        localStorage.setItem("products", JSON.stringify(products));
+        loadProducts();
+        clearForm();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function loadProducts() {
+      const list = document.getElementById("productList");
+      list.innerHTML = "";
+      const products = JSON.parse(localStorage.getItem("products") || "[]");
+      products.forEach((p, i) => {
+        const div = document.createElement("div");
+        div.className = "product-item";
+        div.innerHTML = `
+          <strong>${p.name}</strong><br/>
+          ₹${p.price}<br/>
+          <img src="${p.image}" /><br/>
+          <button onclick="deleteProduct(${i})">Delete</button>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function deleteProduct(index) {
+      let products = JSON.parse(localStorage.getItem("products") || "[]");
+      products.splice(index, 1);
+      localStorage.setItem("products", JSON.stringify(products));
+      loadProducts();
+    }
+
+    function clearForm() {
+      document.getElementById("pname").value = "";
+      document.getElementById("pprice").value = "";
+      document.getElementById("pimage").value = "";
+    }
+  </script>
+
+</body>
+</html>
