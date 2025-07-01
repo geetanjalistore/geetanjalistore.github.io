@@ -23,6 +23,62 @@
     <div id="product-list"></div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const adminUser = "Geetanjali";
+    const adminPass = "9690394370ks";
+
+    function adminLogin() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      if (user === adminUser && pass === adminPass) {
+        document.getElementById("login-section").style.display = "none";
+        document.getElementById("admin-panel").style.display = "block";
+        displayProducts();
+      } else {
+        alert("Invalid login");
+      }
+    }
+
+    function addProduct() {
+      const name = document.getElementById("pname").value;
+      const price = document.getElementById("pprice").value;
+      const file = document.getElementById("pimage").files[0];
+
+      if (!name || !price || !file) {
+        alert("Fill all fields");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        let products = JSON.parse(localStorage.getItem("products") || "[]");
+        products.push({ name, price, image: e.target.result });
+        localStorage.setItem("products", JSON.stringify(products));
+        displayProducts();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function deleteProduct(index) {
+      let products = JSON.parse(localStorage.getItem("products") || "[]");
+      products.splice(index, 1);
+      localStorage.setItem("products", JSON.stringify(products));
+      displayProducts();
+    }
+
+    function displayProducts() {
+      const list = document.getElementById("product-list");
+      list.innerHTML = "";
+      let products = JSON.parse(localStorage.getItem("products") || "[]");
+      products.forEach((p, i) => {
+        list.innerHTML += `
+          <div>
+            <img src="${p.image}" width="100"><br>
+            ${p.name} - ₹${p.price}
+            <button onclick="deleteProduct(${i})">Delete</button>
+          </div><hr>`;
+      });
+    }
+  </script>
 </body>
 </html>
