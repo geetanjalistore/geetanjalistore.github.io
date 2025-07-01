@@ -43,16 +43,16 @@ footer {
     width: 100%;
 }
 
-ul {
-    list-style: none;
-    padding: 0;
+.product {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 15px auto;
+    max-width: 300px;
+    border-radius: 8px;
 }
 
-li {
-    background: white;
-    margin: 10px auto;
-    padding: 10px;
-    border: 1px solid #ddd;
-    max-width: 300px;
-    border-radius: 5px;
+.product img {
+    width: 100%;
+    border-radius: 4px;
 }
