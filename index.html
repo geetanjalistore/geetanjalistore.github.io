@@ -1,3 +1,12 @@
+<div id="header-placeholder"></div>
+
+<script>
+  fetch("Header.html")
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById("header-placeholder").innerHTML = data;
+    });
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
