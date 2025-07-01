@@ -1,35 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Checkout - Geetanjali Store</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h2>Checkout</h2>
-  <p>Total Amount: ₹<span id="amount">0</span></p>
-  <button onclick="payNow()">Pay with Razorpay</button>
-
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <div id="header-placeholder"></div>
   <script>
-    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    let total = cart.reduce((sum, item) => sum + item.price, 0);
-    document.getElementById("amount").innerText = total;
+    fetch("Header.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("header-placeholder").innerHTML = data;
+      });
+  </script>
 
-    function payNow() {
-      var options = {
-        "key": "rzp_test_XXXXXXXXXXXXXX", // Replace with your Razorpay Key
-        "amount": total * 100,
-        "currency": "INR",
-        "name": "Geetanjali Store",
-        "description": "Order Payment",
-        "handler": function (response){
-          alert("Payment Successful: " + response.razorpay_payment_id);
-          localStorage.removeItem("cart");
-          window.location.href = "ordersuccess.html";
-        }
-      };
-      var rzp = new Razorpay(options);
-      rzp.open();
-    }
+  <section class="checkout-page">
+    <h1>Checkout</h1>
+    <form id="checkout-form">
+      <label>Name:</label>
+      <input type="text" required /><br/>
+
+      <label>Phone:</label>
+      <input type="tel" required /><br/>
+
+      <label>Address:</label>
+      <textarea required></textarea><br/>
+
+      <label>Payment Method:</label><br/>
+      <select required>
+        <option value="upi">UPI (PhonePe, Google Pay)</option>
+        <option value="cod">Cash on Delivery</option>
+        <option value="razorpay">Online (Razorpay)</option>
+      </select><br/><br/>
+
+      <button type="submit">Place Order</button>
+    </form>
+  </section>
+
+  <script>
+    document.getElementById("checkout-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("🎉 Order placed successfully!");
+      localStorage.removeItem("cart");
+      window.location.href = "ordersuccess.html";
+    });
   </script>
 </body>
 </html>
