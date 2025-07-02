@@ -4,11 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Checkout - Geetanjali Store</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Header Load -->
   <div id="header-placeholder"></div>
   <script>
     fetch("Header.html")
@@ -18,73 +17,81 @@
       });
   </script>
 
-  <main class="checkout-container">
+  <!-- Checkout Container -->
+  <div class="checkout-container">
     <h2>Checkout</h2>
 
-    <!-- Customer Details -->
-    <section class="form-section">
-      <h3>Customer Details</h3>
-      <form id="checkout-form">
-        <input type="text" placeholder="Full Name" required />
-        <input type="email" placeholder="Email" required />
-        <input type="tel" placeholder="Phone Number" required />
+    <div class="checkout-form">
+      <form id="checkoutForm">
+        <div class="form-group">
+          <label for="fullname">Full Name:</label>
+          <input type="text" id="fullname" name="fullname" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address:</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Delivery Address:</label>
+          <textarea id="address" name="address" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="payment">Payment Method:</label>
+          <select id="payment" name="payment" required>
+            <option value="">Select</option>
+            <option value="COD">Cash on Delivery</option>
+            <option value="razorpay">Razorpay</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="coupon">Coupon Code:</label>
+          <input type="text" id="coupon" name="coupon" placeholder="Enter coupon if any">
+        </div>
+
+        <div class="order-summary">
+          <h3>Order Summary</h3>
+          <ul id="orderItems">
+            <!-- Cart items dynamically inserted via JS -->
+          </ul>
+          <p class="total">Total: ₹<span id="totalAmount">0</span></p>
+        </div>
+
+        <button type="submit" class="checkout-btn">Place Order</button>
       </form>
-    </section>
+    </div>
+  </div>
 
-    <!-- Address -->
-    <section class="form-section">
-      <h3>Shipping Address</h3>
-      <textarea placeholder="Full Address with Pincode" required></textarea>
-      <input type="text" placeholder="City" required />
-      <input type="text" placeholder="State" required />
-      <input type="text" placeholder="Pincode" required />
-    </section>
-
-    <!-- Delivery Options -->
-    <section class="form-section">
-      <h3>Delivery Method</h3>
-      <label><input type="radio" name="delivery" checked /> Standard (3-5 days) - ₹50</label><br />
-      <label><input type="radio" name="delivery" /> Express (1-2 days) - ₹99</label>
-    </section>
-
-    <!-- Payment Method -->
-    <section class="form-section">
-      <h3>Payment Method</h3>
-      <label><input type="radio" name="payment" checked /> UPI / Wallet</label><br />
-      <label><input type="radio" name="payment" /> Debit / Credit Card</label><br />
-      <label><input type="radio" name="payment" /> Cash on Delivery</label>
-    </section>
-
-    <!-- Order Summary -->
-    <section class="order-summary">
-      <h3>Order Summary</h3>
-      <div class="summary-item">
-        <p>Products Total:</p>
-        <p>₹799</p>
-      </div>
-      <div class="summary-item">
-        <p>Delivery Charges:</p>
-        <p>₹50</p>
-      </div>
-      <div class="summary-item total">
-        <p>Total Amount:</p>
-        <p>₹849</p>
-      </div>
-      <button onclick="placeOrder()">Place Order</button>
-    </section>
-  </main>
-
-  <!-- Footer -->
   <footer>
-    <p>© 2025 Geetanjali Store | Contact: 7055094871</p>
+    <p>&copy; 2025 Geetanjali Store | Contact: 7055094871</p>
   </footer>
 
   <script>
-    function placeOrder() {
-      alert("Order placed successfully!");
-      window.location.href = "ordersuccess.html";
-    }
-  </script>
+    // Load cart data and calculate total
+    const orderItems = JSON.parse(localStorage.getItem('cart')) || [];
+    const orderList = document.getElementById("orderItems");
+    const totalAmount = document.getElementById("totalAmount");
 
+    let total = 0;
+    orderItems.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = `${item.name} × ${item.quantity} - ₹${item.price * item.quantity}`;
+      orderList.appendChild(li);
+      total += item.price * item.quantity;
+    });
+
+    totalAmount.textContent = total;
+
+    // Form submit
+    document.getElementById("checkoutForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      alert("Order placed successfully!");
+      localStorage.removeItem('cart');
+      window.location.href = "ordersuccess.html";
+    });
+  </script>
 </body>
 </html>
