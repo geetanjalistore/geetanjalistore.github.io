@@ -1,15 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Products – Geetanjali Store</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Our Products - Geetanjali Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Header -->
+  <div id="header-placeholder"></div>
+  <script>
+    fetch("Header.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("header-placeholder").innerHTML = data;
+      });
+  </script>
+
+  <!-- Products Section -->
+  <section class="products-section">
+    <h2>Our Products</h2>
+    <div class="products-container" id="product-list"></div>
+  </section>
 
   <!-- Firebase SDKs -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
 
+  <script>
+    // Firebase config (replace with yours if needed)
     const firebaseConfig = {
       apiKey: "AIzaSyDfSbrHbz31dy8FXR_8Gj8t3YP05_ZAkcs",
       authDomain: "geetanjalistore-9aa89.firebaseapp.com",
@@ -20,57 +40,34 @@
       measurementId: "G-F3272WGM0T"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      const container = document.getElementById("productContainer");
-      const querySnapshot = await getDocs(collection(db, "products"));
+    const productList = document.getElementById("product-list");
 
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
+    function renderProduct(doc) {
+      const data = doc.data();
+      let card = document.createElement("div");
+      card.classList.add("product-card");
 
-        const card = document.createElement("div");
-        card.className = "product-card";
+      card.innerHTML = `
+        <img src="${data.imageUrl}" alt="${data.name}">
+        <h3>${data.name}</h3>
+        <p>${data.description}</p>
+        <p>₹${data.price}</p>
+        <button>Add to Cart</button>
+      `;
+      productList.appendChild(card);
+    }
 
-        card.innerHTML = `
-          <img src="${data.imageUrl}" alt="${data.name}">
-          <h3>${data.name}</h3>
-          <p>Price: ₹${data.price}</p>
-          <p>${data.description}</p>
-        `;
-
-        container.appendChild(card);
+    db.collection("products").get().then(snapshot => {
+      snapshot.forEach(doc => {
+        renderProduct(doc);
       });
+    }).catch(err => {
+      console.error("Error fetching products:", err);
     });
   </script>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    .product-card {
-      border: 1px solid #ddd;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      width: 280px;
-      display: inline-block;
-      vertical-align: top;
-    }
-    .product-card img {
-      width: 100%;
-      height: auto;
-      border-radius: 6px;
-    }
-    .product-card h3 {
-      margin: 10px 0 5px;
-    }
-  </style>
-</head>
-<body>
-  <h1>Our Products</h1>
-  <div id="productContainer"></div>
 </body>
 </html>
