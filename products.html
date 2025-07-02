@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Geetanjali Store - Products</title>
+  <title>Products – Geetanjali Store</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  <!-- Header Loader -->
   <div id="header-placeholder"></div>
   <script>
     fetch("Header.html")
@@ -16,11 +18,43 @@
       });
   </script>
 
-  <section class="product-page">
-    <h1 class="section-title">Explore Our Products</h1>
-    <div id="product-list" class="product-grid"></div>
+  <!-- Product Listing -->
+  <section class="featured-products">
+    <h2>All Products</h2>
+    <div class="product-list">
+
+      <!-- Product 1 -->
+      <div class="product-card">
+        <img src="https://via.placeholder.com/200" alt="Lakme Lipstick">
+        <h3>Lakme Lipstick</h3>
+        <p>₹299</p>
+        <div class="rating">⭐⭐⭐⭐☆</div>
+        <button>Add to Cart</button>
+        <span class="wishlist">❤️</span>
+      </div>
+
+      <!-- Product 2 -->
+      <div class="product-card">
+        <img src="https://via.placeholder.com/200" alt="VLCC Face Wash">
+        <h3>VLCC Face Wash</h3>
+        <p>₹149</p>
+        <div class="rating">⭐⭐⭐⭐☆</div>
+        <button>Add to Cart</button>
+        <span class="wishlist">❤️</span>
+      </div>
+
+      <!-- Product 3 -->
+      <div class="product-card">
+        <img src="https://via.placeholder.com/200" alt="Mascara">
+        <h3>Maybelline Mascara</h3>
+        <p>₹399</p>
+        <div class="rating">⭐⭐⭐⭐⭐</div>
+        <button>Add to Cart</button>
+        <span class="wishlist">❤️</span>
+      </div>
+
+    </div>
   </section>
 
-  <script src="script.js"></script>
 </body>
 </html>
