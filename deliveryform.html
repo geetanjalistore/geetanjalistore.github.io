@@ -1,8 +1,116 @@
-<form>
-  <h2>Delivery Details</h2>
-  <input type="text" placeholder="Full Name" required>
-  <input type="tel" placeholder="Phone Number" required>
-  <textarea placeholder="Full Address" required></textarea>
-  <input type="number" placeholder="Pincode" required>
-  <button type="submit">Confirm</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery Form - Geetanjali Store</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header Load -->
+  <div id="header-placeholder"></div>
+  <script>
+    fetch("Header.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("header-placeholder").innerHTML = data;
+      });
+  </script>
+
+  <!-- Delivery Form Section -->
+  <div class="delivery-form-container">
+    <h2>Delivery Address</h2>
+    <form id="deliveryForm">
+      <label for="fullname">Full Name:</label>
+      <input type="text" id="fullname" name="fullname" required>
+
+      <label for="address">Full Address:</label>
+      <textarea id="address" name="address" rows="3" required></textarea>
+
+      <label for="pincode">Pincode:</label>
+      <input type="text" id="pincode" name="pincode" required>
+
+      <label for="city">City:</label>
+      <input type="text" id="city" name="city" required>
+
+      <label for="state">State:</label>
+      <input type="text" id="state" name="state" required>
+
+      <label for="deliveryType">Delivery Method:</label>
+      <select id="deliveryType" name="deliveryType" onchange="calculateCharge()">
+        <option value="standard">Standard (₹50)</option>
+        <option value="express">Express (₹99)</option>
+      </select>
+
+      <p class="charge-display">Delivery Charges: ₹<span id="deliveryCharge">50</span></p>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Geetanjali Store | Contact: 7055094871</p>
+  </footer>
+
+  <style>
+    .delivery-form-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .delivery-form-container h2 {
+      margin-bottom: 20px;
+    }
+    .delivery-form-container form {
+      display: flex;
+      flex-direction: column;
+    }
+    .delivery-form-container label {
+      margin-top: 12px;
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+    .delivery-form-container input,
+    .delivery-form-container textarea,
+    .delivery-form-container select {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .charge-display {
+      margin-top: 15px;
+      font-size: 16px;
+      color: #e91e63;
+    }
+    .delivery-form-container button {
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #e91e63;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+
+  <script>
+    function calculateCharge() {
+      const deliveryType = document.getElementById("deliveryType").value;
+      const chargeDisplay = document.getElementById("deliveryCharge");
+      chargeDisplay.textContent = deliveryType === "express" ? "99" : "50";
+    }
+
+    document.getElementById("deliveryForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("Delivery details submitted successfully!");
+      window.location.href = "checkout.html";
+    });
+  </script>
+
+</body>
+</html>
