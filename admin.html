@@ -1,44 +1,69 @@
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Geetanjali Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
 
-<!-- Firebase Config (Paste yours below) -->
-<script>
-  const firebaseConfig = {
-    apiKey: "YOUR-API-KEY",
-    authDomain: "your-app.firebaseapp.com",
-    databaseURL: "https://your-app.firebaseio.com",
-    projectId: "your-app",
-    storageBucket: "your-app.appspot.com",
-    messagingSenderId: "SENDER_ID",
-    appId: "APP_ID"
-  };
-  firebase.initializeApp(firebaseConfig);
-</script>
+  <!-- Firebase Config -->
+  <script type="module" src="firebase-config.js"></script>
+</head>
+<body>
+  <h1>Admin Panel – Add Product</h1>
 
-<h2>Add Product</h2>
-<form id="productForm">
-  <input type="text" id="pname" placeholder="Product Name" required><br/>
-  <input type="number" id="price" placeholder="Price" required><br/>
-  <input type="file" id="image" accept="image/*" required><br/>
-  <button type="submit">Add Product</button>
-</form>
+  <form id="productForm">
+    <input type="text" id="productName" placeholder="Product Name" required><br><br>
+    <input type="text" id="productPrice" placeholder="Product Price" required><br><br>
+    <textarea id="productDescription" placeholder="Product Description" required></textarea><br><br>
+    <input type="file" id="productImage" accept="image/*" required><br><br>
+    <button type="submit">Add Product</button>
+  </form>
 
-<script>
-  document.getElementById("productForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-    const pname = document.getElementById("pname").value;
-    const price = document.getElementById("price").value;
-    const file = document.getElementById("image").files[0];
-    const storageRef = firebase.storage().ref('products/' + file.name);
+  <p id="statusMsg"></p>
 
-    storageRef.put(file).then(snapshot => {
-      snapshot.ref.getDownloadURL().then(url => {
-        const productRef = firebase.database().ref("products").push();
-        productRef.set({ name: pname, price: price, image: url });
-        alert("✅ Product Added!");
-        document.getElementById("productForm").reset();
-      });
+  <!-- Firebase Upload Script -->
+  <script type="module">
+    import { storage, db } from './firebase-config.js';
+    import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
+    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+
+    const form = document.getElementById("productForm");
+    const statusMsg = document.getElementById("statusMsg");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("productName").value;
+      const price = document.getElementById("productPrice").value;
+      const desc = document.getElementById("productDescription").value;
+      const image = document.getElementById("productImage").files[0];
+
+      if (!image) {
+        statusMsg.innerText = "⚠️ Please select an image";
+        return;
+      }
+
+      const imageRef = ref(storage, `products/${image.name}`);
+
+      try {
+        await uploadBytes(imageRef, image);
+        const imageUrl = await getDownloadURL(imageRef);
+
+        await addDoc(collection(db, "products"), {
+          name,
+          price,
+          description: desc,
+          imageUrl,
+          timestamp: new Date()
+        });
+
+        statusMsg.innerText = "✅ Product added successfully!";
+        form.reset();
+      } catch (error) {
+        console.error("Upload error:", error);
+        statusMsg.innerText = "❌ Failed to add product.";
+      }
     });
-  });
-</script>
+  </script>
+</body>
+</html>
