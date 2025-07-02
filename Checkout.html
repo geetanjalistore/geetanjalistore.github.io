@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  <!-- Header Load -->
   <div id="header-placeholder"></div>
   <script>
     fetch("Header.html")
@@ -16,36 +18,73 @@
       });
   </script>
 
-  <section class="checkout-page">
-    <h1>Checkout</h1>
-    <form id="checkout-form">
-      <label>Name:</label>
-      <input type="text" required /><br/>
+  <main class="checkout-container">
+    <h2>Checkout</h2>
 
-      <label>Phone:</label>
-      <input type="tel" required /><br/>
+    <!-- Customer Details -->
+    <section class="form-section">
+      <h3>Customer Details</h3>
+      <form id="checkout-form">
+        <input type="text" placeholder="Full Name" required />
+        <input type="email" placeholder="Email" required />
+        <input type="tel" placeholder="Phone Number" required />
+      </form>
+    </section>
 
-      <label>Address:</label>
-      <textarea required></textarea><br/>
+    <!-- Address -->
+    <section class="form-section">
+      <h3>Shipping Address</h3>
+      <textarea placeholder="Full Address with Pincode" required></textarea>
+      <input type="text" placeholder="City" required />
+      <input type="text" placeholder="State" required />
+      <input type="text" placeholder="Pincode" required />
+    </section>
 
-      <label>Payment Method:</label><br/>
-      <select required>
-        <option value="upi">UPI (PhonePe, Google Pay)</option>
-        <option value="cod">Cash on Delivery</option>
-        <option value="razorpay">Online (Razorpay)</option>
-      </select><br/><br/>
+    <!-- Delivery Options -->
+    <section class="form-section">
+      <h3>Delivery Method</h3>
+      <label><input type="radio" name="delivery" checked /> Standard (3-5 days) - ₹50</label><br />
+      <label><input type="radio" name="delivery" /> Express (1-2 days) - ₹99</label>
+    </section>
 
-      <button type="submit">Place Order</button>
-    </form>
-  </section>
+    <!-- Payment Method -->
+    <section class="form-section">
+      <h3>Payment Method</h3>
+      <label><input type="radio" name="payment" checked /> UPI / Wallet</label><br />
+      <label><input type="radio" name="payment" /> Debit / Credit Card</label><br />
+      <label><input type="radio" name="payment" /> Cash on Delivery</label>
+    </section>
+
+    <!-- Order Summary -->
+    <section class="order-summary">
+      <h3>Order Summary</h3>
+      <div class="summary-item">
+        <p>Products Total:</p>
+        <p>₹799</p>
+      </div>
+      <div class="summary-item">
+        <p>Delivery Charges:</p>
+        <p>₹50</p>
+      </div>
+      <div class="summary-item total">
+        <p>Total Amount:</p>
+        <p>₹849</p>
+      </div>
+      <button onclick="placeOrder()">Place Order</button>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Geetanjali Store | Contact: 7055094871</p>
+  </footer>
 
   <script>
-    document.getElementById("checkout-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      alert("🎉 Order placed successfully!");
-      localStorage.removeItem("cart");
+    function placeOrder() {
+      alert("Order placed successfully!");
       window.location.href = "ordersuccess.html";
-    });
+    }
   </script>
+
 </body>
 </html>
