@@ -1,56 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Panel – Add Product</title>
-  <style>
-    body {
-      font-family: Arial;
-      padding: 20px;
-    }
-    input, textarea, button {
-      display: block;
-      margin-bottom: 15px;
-      padding: 10px;
-      width: 300px;
-    }
-  </style>
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
 </head>
 <body>
-
   <h2>Admin Panel – Add Product</h2>
 
-  <input type="text" id="productName" placeholder="Product Name" />
-  <input type="number" id="productPrice" placeholder="Product Price" />
-  <textarea id="productDescription" placeholder="Product Description"></textarea>
-  <input type="file" id="productImage" />
-  <button id="addProductBtn">Add Product</button>
+  <input type="text" id="productName" placeholder="Product Name"><br>
+  <input type="number" id="productPrice" placeholder="Price"><br>
+  <textarea id="productDescription" placeholder="Description"></textarea><br>
+  <input type="file" id="productImage"><br>
+  <button onclick="addProduct()">Add Product</button>
 
-  <script>
-    // Firebase Config
+  <!-- Firebase SDKs -->
+  <script type="module">
+    // SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyDfSbrHbz31dy8FXR_8Gj8t3YP05_ZAkcs",
       authDomain: "geetanjalistore-9aa89.firebaseapp.com",
       projectId: "geetanjalistore-9aa89",
-      storageBucket: "geetanjalistore-9aa89.appspot.com",
+      storageBucket: "geetanjalistore-9aa89.appspot.com", // ✅ Yeh correct hai
       messagingSenderId: "260477667101",
       appId: "1:260477667101:web:39583c62ed91ba32c743f4",
       measurementId: "G-F3272WGM0T"
     };
 
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const storage = firebase.storage();
+    // Init
+    const app = initializeApp(firebaseConfig);
+    const storage = getStorage(app);
+    const db = getFirestore(app);
 
-    // Add Product
-    document.getElementById("addProductBtn").addEventListener("click", function () {
+    window.addProduct = async function () {
       const name = document.getElementById("productName").value;
       const price = document.getElementById("productPrice").value;
       const description = document.getElementById("productDescription").value;
-      const file = document.getElement
+      const imageFile = document.getElementById("productImage").files[0];
+
+      if (!name || !price || !description || !imageFile) {
+        alert("Please fill all fields.");
+        return;
+      }
+
+      // Upload Image
+      const storageRef = ref(storage, 'product_images/' + imageFile.name);
+      await uploadBytes(storageRef, imageFile);
+      const imageUrl = await getDownloadURL(storageRef);
+
+      // Save Data
+      await addDoc(collection(db, "products"), {
+        name,
+        price: parseFloat(price),
+        description,
+        imageUrl
+      });
+
+      alert("Product Added Successfully!");
+      location.reload();
+    };
+  </script>
+</body>
+</html>
