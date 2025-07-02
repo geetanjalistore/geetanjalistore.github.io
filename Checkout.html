@@ -1,95 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Checkout - Geetanjali Store</title>
+  <meta charset="UTF-8">
+  <title>Checkout – Geetanjali Store</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .summary {
+      margin-top: 30px;
+      font-size: 18px;
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 <body>
-
-  <div id="header-placeholder"></div>
-  <script>
-    fetch("Header.html")
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById("header-placeholder").innerHTML = data;
-      });
-  </script>
-
-  <!-- Checkout Container -->
-  <div class="checkout-container">
-    <h2>Checkout</h2>
-
-    <div class="checkout-form">
-      <form id="checkoutForm">
-        <div class="form-group">
-          <label for="fullname">Full Name:</label>
-          <input type="text" id="fullname" name="fullname" required>
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email Address:</label>
-          <input type="email" id="email" name="email" required>
-        </div>
-
-        <div class="form-group">
-          <label for="address">Delivery Address:</label>
-          <textarea id="address" name="address" rows="3" required></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="payment">Payment Method:</label>
-          <select id="payment" name="payment" required>
-            <option value="">Select</option>
-            <option value="COD">Cash on Delivery</option>
-            <option value="razorpay">Razorpay</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="coupon">Coupon Code:</label>
-          <input type="text" id="coupon" name="coupon" placeholder="Enter coupon if any">
-        </div>
-
-        <div class="order-summary">
-          <h3>Order Summary</h3>
-          <ul id="orderItems">
-            <!-- Cart items dynamically inserted via JS -->
-          </ul>
-          <p class="total">Total: ₹<span id="totalAmount">0</span></p>
-        </div>
-
-        <button type="submit" class="checkout-btn">Place Order</button>
-      </form>
-    </div>
-  </div>
-
-  <footer>
-    <p>&copy; 2025 Geetanjali Store | Contact: 7055094871</p>
-  </footer>
+  <h2>Checkout</h2>
+  <form id="checkoutForm">
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="tel" id="phone" placeholder="Phone Number" required>
+    <textarea id="address" placeholder="Delivery Address" required></textarea>
+    <div class="summary" id="cartSummary">Loading cart...</div>
+    <button type="submit">Place Order</button>
+  </form>
 
   <script>
-    // Load cart data and calculate total
-    const orderItems = JSON.parse(localStorage.getItem('cart')) || [];
-    const orderList = document.getElementById("orderItems");
-    const totalAmount = document.getElementById("totalAmount");
-
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
     let total = 0;
-    orderItems.forEach(item => {
-      const li = document.createElement('li');
-      li.textContent = `${item.name} × ${item.quantity} - ₹${item.price * item.quantity}`;
-      orderList.appendChild(li);
-      total += item.price * item.quantity;
-    });
+    const summary = document.getElementById("cartSummary");
 
-    totalAmount.textContent = total;
+    if (cart.length === 0) {
+      summary.innerHTML = "Your cart is empty.";
+    } else {
+      cart.forEach(item => {
+        total += parseFloat(item.price);
+      });
 
-    // Form submit
-    document.getElementById("checkoutForm").addEventListener("submit", function (e) {
+      summary.innerHTML = `
+        <strong>Total Products:</strong> ${cart.length}<br>
+        <strong>Total Amount:</strong> ₹${total.toFixed(2)}
+      `;
+    }
+
+    const form = document.getElementById("checkoutForm");
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
-      alert("Order placed successfully!");
-      localStorage.removeItem('cart');
+      alert("✅ Order Placed Successfully!");
+      localStorage.removeItem("cart");
       window.location.href = "ordersuccess.html";
     });
   </script>
