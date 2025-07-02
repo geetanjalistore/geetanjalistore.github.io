@@ -1,24 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Order Successful - Geetanjali Store</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div id="header-placeholder"></div>
+<body>  <!-- Header Load -->  <div id="header-placeholder"></div>
   <script>
     fetch("Header.html")
       .then(res => res.text())
       .then(data => {
         document.getElementById("header-placeholder").innerHTML = data;
       });
-  </script>
-
-  <div class="success-container">
-    <h1>Thank You! 🎉</h1>
-    <p>Your order has been placed successfully.</p>
-    <a href="products.html" class="btn">Continue Shopping</a>
-  </div>
-</body>
+  </script>  <!-- Order Success Message -->  <section class="order-success">
+    <div class="success-container">
+      <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Success" class="success-icon">
+      <h2>Thank You for Your Order!</h2>
+      <p>Your order has been placed successfully. We will notify you when it is shipped.</p>
+      <a href="index.html" class="btn">Continue Shopping</a>
+    </div>
+  </section>  <style>
+    .order-success {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 70vh;
+      background-color: #f3f3f3;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .success-container {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .success-container h2 {
+      color: #4BB543;
+      margin-top: 20px;
+    }
+    .success-container p {
+      font-size: 16px;
+      margin-top: 10px;
+      color: #555;
+    }
+    .success-icon {
+      width: 80px;
+      height: 80px;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      background-color: #e91e63;
+      color: white;
+      padding: 12px 25px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    .btn:hover {
+      background-color: #d81b60;
+    }
+  </style>  <!-- Footer -->  <footer>
+    <p>&copy; 2025 Geetanjali Store | Contact: 7055094871</p>
+  </footer></body>
 </html>
