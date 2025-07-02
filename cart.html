@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cart - Geetanjali Store</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  <!-- Header Load -->
   <div id="header-placeholder"></div>
   <script>
     fetch("Header.html")
@@ -16,52 +18,37 @@
       });
   </script>
 
-  <section class="cart-page">
-    <h1 class="section-title">Your Shopping Cart</h1>
-    <div id="cart-items"></div>
-    <h2 id="total-price"></h2>
-    <a href="checkout.html" class="btn">Proceed to Checkout</a>
-  </section>
+  <!-- Cart Section -->
+  <div class="cart-container">
+    <h2>Your Shopping Cart</h2>
 
-  <script>
-    function loadCart() {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      const container = document.getElementById("cart-items");
-      container.innerHTML = "";
-      let total = 0;
+    <div class="cart-item">
+      <img src="https://via.placeholder.com/100" alt="Product" />
+      <div class="cart-item-details">
+        <h4>Lakme Lipstick</h4>
+        <p>Qty: 1</p>
+        <p class="cart-item-price">₹299</p>
+      </div>
+    </div>
 
-      if (cart.length === 0) {
-        container.innerHTML = "<p>Your cart is empty.</p>";
-        document.getElementById("total-price").textContent = "";
-        return;
-      }
+    <div class="cart-item">
+      <img src="https://via.placeholder.com/100" alt="Product" />
+      <div class="cart-item-details">
+        <h4>VLCC Face Wash</h4>
+        <p>Qty: 2</p>
+        <p class="cart-item-price">₹149 x 2 = ₹298</p>
+      </div>
+    </div>
 
-      cart.forEach((item, index) => {
-        const itemDiv = document.createElement("div");
-        itemDiv.className = "cart-item";
-        itemDiv.innerHTML = `
-          <img src="${item.image}" alt="${item.name}">
-          <div>
-            <h2>${item.name}</h2>
-            <p>₹${item.price}</p>
-            <button onclick="removeFromCart(${index})">Remove</button>
-          </div>
-        `;
-        container.appendChild(itemDiv);
-        total += item.price;
-      });
+    <div class="cart-total">
+      Total: ₹597
+    </div>
+    <button class="checkout-btn" onclick="location.href='checkout.html'">Proceed to Checkout</button>
+  </div>
 
-      document.getElementById("total-price").textContent = "Total: ₹" + total;
-    }
-
-    function removeFromCart(index) {
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
-      cart.splice(index, 1);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      loadCart();
-    }
-
-    document.addEventListener("DOMContentLoaded", loadCart);
-  </script>
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Geetanjali Store | Contact: 7055094871</p>
+  </footer>
 </body>
 </html>
