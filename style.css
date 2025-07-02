@@ -1,31 +1,120 @@
-body {
-  font-family: Arial, sans-serif;
-  padding: 10px;
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
 }
+
+body {
+  background-color: #fff;
+  color: #222;
+}
+
+/* Header Style (loaded via Header.html) */
 header {
-  background: #f44336;
-  color: white;
-  padding: 15px;
+  background-color: #e91e63;
+  color: #fff;
+  padding: 15px 20px;
+  text-align: center;
+  font-size: 24px;
+}
+
+header nav a {
+  color: #fff;
+  margin: 0 15px;
+  text-decoration: none;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+/* Banner */
+.banner img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+/* Categories */
+.categories {
+  padding: 20px;
   text-align: center;
 }
-nav a {
-  margin: 0 10px;
-  text-decoration: none;
-  color: white;
+
+.category-grid {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 15px;
 }
+
+.category {
+  background-color: #ff4081;
+  color: #fff;
+  padding: 15px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Products */
+.featured-products {
+  padding: 20px;
+  text-align: center;
+}
+
 .product-list {
   display: flex;
+  justify-content: center;
   gap: 20px;
+  flex-wrap: wrap;
 }
-.product {
+
+.product-card {
   border: 1px solid #ccc;
+  border-radius: 8px;
   padding: 10px;
-  text-align: center;
+  width: 200px;
+  background-color: #fdfdfd;
 }
-button {
-  padding: 8px 12px;
-  background: #4CAF50;
-  color: white;
+
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.product-card h3 {
+  font-size: 18px;
+  margin: 10px 0 5px;
+}
+
+.product-card p {
+  color: green;
+  font-weight: bold;
+}
+
+.product-card button {
+  background-color: #e91e63;
+  color: #fff;
   border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
   cursor: pointer;
+  margin-top: 10px;
+}
+
+.product-card button:hover {
+  background-color: #d81b60;
+}
+
+/* Footer */
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+  margin-top: 30px;
 }
