@@ -1,60 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Products – Geetanjali Store</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
+  <link rel="stylesheet" href="style.css">
 
-  <!-- Header Loader -->
-  <div id="header-placeholder"></div>
-  <script>
-    fetch("Header.html")
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById("header-placeholder").innerHTML = data;
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDfSbrHbz31dy8FXR_8Gj8t3YP05_ZAkcs",
+      authDomain: "geetanjalistore-9aa89.firebaseapp.com",
+      projectId: "geetanjalistore-9aa89",
+      storageBucket: "geetanjalistore-9aa89.appspot.com",
+      messagingSenderId: "260477667101",
+      appId: "1:260477667101:web:39583c62ed91ba32c743f4",
+      measurementId: "G-F3272WGM0T"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const container = document.getElementById("productContainer");
+      const querySnapshot = await getDocs(collection(db, "products"));
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+
+        const card = document.createElement("div");
+        card.className = "product-card";
+
+        card.innerHTML = `
+          <img src="${data.imageUrl}" alt="${data.name}">
+          <h3>${data.name}</h3>
+          <p>Price: ₹${data.price}</p>
+          <p>${data.description}</p>
+        `;
+
+        container.appendChild(card);
       });
+    });
   </script>
 
-  <!-- Product Listing -->
-  <section class="featured-products">
-    <h2>All Products</h2>
-    <div class="product-list">
-
-      <!-- Product 1 -->
-      <div class="product-card">
-        <img src="https://via.placeholder.com/200" alt="Lakme Lipstick">
-        <h3>Lakme Lipstick</h3>
-        <p>₹299</p>
-        <div class="rating">⭐⭐⭐⭐☆</div>
-        <button>Add to Cart</button>
-        <span class="wishlist">❤️</span>
-      </div>
-
-      <!-- Product 2 -->
-      <div class="product-card">
-        <img src="https://via.placeholder.com/200" alt="VLCC Face Wash">
-        <h3>VLCC Face Wash</h3>
-        <p>₹149</p>
-        <div class="rating">⭐⭐⭐⭐☆</div>
-        <button>Add to Cart</button>
-        <span class="wishlist">❤️</span>
-      </div>
-
-      <!-- Product 3 -->
-      <div class="product-card">
-        <img src="https://via.placeholder.com/200" alt="Mascara">
-        <h3>Maybelline Mascara</h3>
-        <p>₹399</p>
-        <div class="rating">⭐⭐⭐⭐⭐</div>
-        <button>Add to Cart</button>
-        <span class="wishlist">❤️</span>
-      </div>
-
-    </div>
-  </section>
-
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .product-card {
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      width: 280px;
+      display: inline-block;
+      vertical-align: top;
+    }
+    .product-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+    .product-card h3 {
+      margin: 10px 0 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Our Products</h1>
+  <div id="productContainer"></div>
 </body>
 </html>
