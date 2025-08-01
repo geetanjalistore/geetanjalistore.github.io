@@ -1,73 +1,121 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Our Products - Geetanjali Store</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <!-- Header -->
-  <div id="header-placeholder"></div>
-  <script>
-    fetch("Header.html")
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById("header-placeholder").innerHTML = data;
-      });
-  </script>
+import { Heart, ShoppingCart, Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Product } from '@shared/schema';
+import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
+import { Link } from 'wouter';
 
-  <!-- Products Section -->
-  <section class="products-section">
-    <h2>Our Products</h2>
-    <div class="products-container" id="product-list"></div>
-  </section>
+interface ProductCardProps {
+  product: Product;
+}
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+export function ProductCard({ product }: ProductCardProps) {
+  const { addItem } = useCart();
+  const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlist();
 
-  <script>
-    // Firebase config (replace with yours if needed)
-    const firebaseConfig = {
-      apiKey: "AIzaSyDfSbrHbz31dy8FXR_8Gj8t3YP05_ZAkcs",
-      authDomain: "geetanjalistore-9aa89.firebaseapp.com",
-      projectId: "geetanjalistore-9aa89",
-      storageBucket: "geetanjalistore-9aa89.appspot.com",
-      messagingSenderId: "260477667101",
-      appId: "1:260477667101:web:39583c62ed91ba32c743f4",
-      measurementId: "G-F3272WGM0T"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    const productList = document.getElementById("product-list");
-
-    function renderProduct(doc) {
-      const data = doc.data();
-      let card = document.createElement("div");
-      card.classList.add("product-card");
-
-      card.innerHTML = `
-        <img src="${data.imageUrl}" alt="${data.name}">
-        <h3>${data.name}</h3>
-        <p>${data.description}</p>
-        <p>₹${data.price}</p>
-        <button>Add to Cart</button>
-      `;
-      productList.appendChild(card);
-    }
-
-    db.collection("products").get().then(snapshot => {
-      snapshot.forEach(doc => {
-        renderProduct(doc);
-      });
-    }).catch(err => {
-      console.error("Error fetching products:", err);
+  const handleAddToCart = () => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      salePrice: product.salePrice || undefined,
+      imageUrl: product.imageUrl,
     });
-  </script>
-</body>
-</html>
+  };
+
+  const handleToggleWishlist = () => {
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        salePrice: product.salePrice || undefined,
+        imageUrl: product.imageUrl,
+      });
+    }
+  };
+
+  const displayPrice = product.salePrice ? parseFloat(product.salePrice) : parseFloat(product.price);
+  const originalPrice = product.salePrice ? parseFloat(product.price) : null;
+  const discountPercent = originalPrice ? Math.round(((originalPrice - displayPrice) / originalPrice) * 100) : null;
+
+  return (
+    <div className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
+      <div className="relative">
+        <Link href={`/product/${product.id}`}>
+          <img 
+            src={product.imageUrl} 
+            alt={product.name}
+            className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        </Link>
+        
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleToggleWishlist}
+          className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        >
+          <Heart className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-[--beauty-primary] text-[--beauty-primary]' : 'text-gray-400 hover:text-[--beauty-primary]'}`} />
+        </Button>
+
+        {discountPercent && (
+          <Badge className="absolute top-4 left-4 bg-[--beauty-accent] text-white px-3 py-1 rounded-full text-sm font-semibold">
+            {discountPercent}% OFF
+          </Badge>
+        )}
+
+        {product.createdAt && new Date(product.createdAt).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000 && (
+          <Badge className="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+            NEW
+          </Badge>
+        )}
+      </div>
+      
+      <div className="p-6">
+        <Link href={`/product/${product.id}`}>
+          <h4 className="font-semibold text-gray-900 mb-2 hover:text-[--beauty-primary] transition-colors cursor-pointer">
+            {product.name}
+          </h4>
+        </Link>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
+        
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-2">
+            <span className="font-bold text-lg text-gray-900">
+              ${displayPrice.toFixed(2)}
+            </span>
+            {originalPrice && (
+              <span className="text-gray-500 line-through text-sm">
+                ${originalPrice.toFixed(2)}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center">
+            <div className="flex text-yellow-400">
+              {[...Array(5)].map((_, i) => (
+                <Star 
+                  key={i} 
+                  className={`h-3 w-3 ${i < Math.floor(parseFloat(product.rating || '0')) ? 'fill-current' : ''}`} 
+                />
+              ))}
+            </div>
+            <span className="text-gray-600 text-sm ml-1">({product.reviewCount})</span>
+          </div>
+        </div>
+        
+        <Button 
+          onClick={handleAddToCart}
+          className="w-full bg-[--beauty-primary] text-white py-3 rounded-xl font-semibold hover:bg-pink-600 transition-colors"
+          disabled={!product.inStock}
+        >
+          <ShoppingCart className="h-4 w-4 mr-2" />
+          {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+        </Button>
+      </div>
+    </div>
+  );
+}
