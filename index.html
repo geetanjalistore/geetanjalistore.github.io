@@ -1,63 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Geetanjali Store – Cosmetics</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="icon.png" />
-</head>
-<body>
-
-  <!-- Header Load -->
-  <div id="header-placeholder"></div>
-  <script>
-    fetch("Header.html")
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById("header-placeholder").innerHTML = data;
-      });
-  </script>
-
-  <!-- Banner Section -->
-  <section class="banner">
-    <img src="https://via.placeholder.com/1200x400?text=Welcome+to+Geetanjali+Store" alt="Banner">
-  </section>
-
-  <!-- Categories Section -->
-  <section class="categories">
-    <h2>Categories</h2>
-    <div class="category-grid">
-      <a href="products.html"><div class="category">Lipsticks</div></a>
-      <a href="products.html"><div class="category">Face Care</div></a>
-      <a href="products.html"><div class="category">Hair Products</div></a>
-      <a href="products.html"><div class="category">Nail Polish</div></a>
-    </div>
-  </section>
-
-  <!-- Featured Products -->
-  <section class="featured-products">
-    <h2>Featured Products</h2>
-    <div class="product-list" id="featured-products">
-      <div class="product-card">
-        <img src="https://via.placeholder.com/200x200" alt="Product">
-        <h3>Lakme Lipstick</h3>
-        <p>₹299</p>
-        <button onclick="location.href='products.html'">View More</button>
-      </div>
-      <div class="product-card">
-        <img src="https://via.placeholder.com/200x200" alt="Product">
-        <h3>VLCC Face Wash</h3>
-        <p>₹149</p>
-        <button onclick="location.href='products.html'">View More</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <p>© 2025 Geetanjali Store | Contact: 7055094871</p>
-  </footer>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
 </html>
