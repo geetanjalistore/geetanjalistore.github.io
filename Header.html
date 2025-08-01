@@ -1,39 +1,109 @@
-modules = ["nodejs-20", "web", "postgresql-16"]
-run = "npm run dev"
-hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
+import { useState } from 'react';
+import { Link, useLocation } from 'wouter';
+import { Search, Heart, ShoppingCart, Menu, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 
-[nix]
-channel = "stable-24_05"
+interface HeaderProps {
+  onSearch: (query: string) => void;
+}
 
-[deployment]
-deploymentTarget = "autoscale"
-build = ["npm", "run", "build"]
-run = ["npm", "run", "start"]
+export function Header({ onSearch }: HeaderProps) {
+  const [location, navigate] = useLocation();
+  const [searchQuery, setSearchQuery] = useState('');
+  const { state: cartState, toggleCart, getItemCount } = useCart();
+  const { state: wishlistState } = useWishlist();
 
-[[ports]]
-localPort = 5000
-externalPort = 80
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      onSearch(searchQuery.trim());
+      navigate('/products');
+    }
+  };
 
-[env]
-PORT = "5000"
+  const isActive = (path: string) => location === path;
 
-[workflows]
-runButton = "Project"
+  return (
+    <header className="sticky top-0 z-50 bg-white shadow-sm border-b">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+            <Sparkles className="text-[--beauty-primary] text-2xl" />
+            <h1 className="font-playfair text-2xl font-bold text-gray-900">BeautyBloom</h1>
+          </Link>
 
-[[workflows.workflow]]
-name = "Project"
-mode = "parallel"
-author = "agent"
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <Link href="/" className={`transition-colors font-medium ${
+              isActive('/') ? 'text-[--beauty-primary]' : 'text-gray-900 hover:text-[--beauty-primary]'
+            }`}>
+              Home
+            </Link>
+            <Link href="/products" className={`transition-colors font-medium ${
+              isActive('/products') ? 'text-[--beauty-primary]' : 'text-gray-900 hover:text-[--beauty-primary]'
+            }`}>
+              Products
+            </Link>
+            <Link href="/admin" className={`transition-colors font-medium ${
+              isActive('/admin') ? 'text-[--beauty-primary]' : 'text-gray-900 hover:text-[--beauty-primary]'
+            }`}>
+              Admin
+            </Link>
+          </nav>
 
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Start application"
+          {/* Search Bar */}
+          <div className="hidden md:flex flex-1 max-w-md mx-8">
+            <form onSubmit={handleSearch} className="relative w-full">
+              <Input 
+                type="text" 
+                placeholder="Search products..." 
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[--beauty-primary] focus:border-transparent"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            </form>
+          </div>
 
-[[workflows.workflow]]
-name = "Start application"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm run dev"
-waitForPort = 5000
+          {/* Action Buttons */}
+          <div className="flex items-center space-x-4">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className="relative p-2 text-gray-600 hover:text-[--beauty-primary] transition-colors"
+            >
+              <Heart className="h-5 w-5" />
+              {wishlistState.items.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[--beauty-accent] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {wishlistState.items.length}
+                </span>
+              )}
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={toggleCart}
+              className="relative p-2 text-gray-600 hover:text-[--beauty-primary] transition-colors"
+            >
+              <ShoppingCart className="h-5 w-5" />
+              {getItemCount() > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[--beauty-accent] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {getItemCount()}
+                </span>
+              )}
+            </Button>
+            
+            <Button variant="ghost" size="icon" className="md:hidden p-2 text-gray-600">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
